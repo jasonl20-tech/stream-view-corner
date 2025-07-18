@@ -2,41 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Video Platform Design System - Dark theme with purple/blue accents */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 15% 8%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 15% 12%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 15% 12%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 271 81% 56%;
     --primary-foreground: 210 40% 98%;
+    --primary-glow: 271 91% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 10% 64%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 240 100% 70%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 271 81% 56%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Video Platform Specific Colors */
+    --video-bg: 220 18% 10%;
+    --video-card: 220 15% 14%;
+    --video-hover: 220 15% 18%;
+    --nav-bg: 220 15% 6%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(271 81% 56%), hsl(240 100% 70%));
+    --gradient-card: linear-gradient(145deg, hsl(220 15% 12%), hsl(220 15% 16%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%) 0%, hsl(271 81% 56% / 0.1) 100%);
+    
+    /* Shadows */
+    --shadow-video: 0 10px 40px -10px hsl(271 81% 56% / 0.3);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 40px hsl(271 91% 65% / 0.4);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +120,43 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Video Platform Components */
+  .video-card {
+    @apply bg-card border border-border rounded-lg overflow-hidden transition-all duration-300;
+    @apply hover:scale-105 hover:shadow-lg hover:border-primary/50;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+  
+  .video-card:hover {
+    box-shadow: var(--shadow-video);
+    transform: translateY(-4px) scale(1.02);
+  }
+  
+  .nav-link {
+    @apply relative text-muted-foreground hover:text-primary transition-colors duration-300;
+    @apply after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5;
+    @apply after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right;
+    @apply after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+  
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .search-input {
+    @apply bg-card border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/20;
+    @apply transition-all duration-300;
   }
 }
