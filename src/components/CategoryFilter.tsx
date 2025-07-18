@@ -26,7 +26,7 @@ export const CategoryFilter = ({ activeCategory, onCategoryChange }: CategoryFil
           variant={activeCategory === category ? "default" : "outline"}
           size="sm"
           onClick={() => onCategoryChange(category)}
-          className={`whitespace-nowrap transition-all duration-300 ${
+          className={`whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
             activeCategory === category
               ? "btn-primary"
               : "hover:bg-card hover:border-primary/50"

@@ -1,56 +1,101 @@
-import { Search, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Search, Menu, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
+  const { user, signOut } = useAuth();
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
-    <header className="bg-nav-bg border-b border-border sticky top-0 z-50 backdrop-blur-sm">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="md:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+    <header className="sticky top-0 z-50 bg-nav-bg/95 backdrop-blur supports-[backdrop-filter]:bg-nav-bg/60 border-b border-border">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <div className="flex items-center space-x-4">
+          <Link to="/">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               hub4porn.com
             </h1>
-          </div>
-
-          {/* Search */}
-          <div className="hidden md:flex items-center flex-1 max-w-2xl mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Suche nach Videos..."
-                className="search-input pl-10 pr-4 py-2 w-full"
-              />
-            </div>
-          </div>
-
-          {/* User Actions */}
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" className="md:hidden">
-              <Search className="h-5 w-5" />
-            </Button>
-            <Button className="btn-primary">
-              <User className="h-4 w-4 mr-2" />
-              Anmelden
-            </Button>
-          </div>
+          </Link>
         </div>
 
-        {/* Mobile Search */}
-        <div className="md:hidden mt-3">
-          <div className="relative">
+        {/* Search Bar - Desktop */}
+        <div className="hidden md:flex flex-1 max-w-md mx-8">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Suche nach Videos..."
-              className="search-input pl-10 pr-4 py-2 w-full"
+              placeholder="Videos suchen..."
+              className="pl-10 search-input w-full"
             />
           </div>
         </div>
+
+        {/* User Actions */}
+        <div className="flex items-center space-x-2 md:space-x-4">
+          {/* Search Toggle - Mobile */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="md:hidden"
+            onClick={() => setSearchOpen(!searchOpen)}
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="flex items-center">
+                  <User className="h-4 w-4 mr-1 md:mr-2" />
+                  <span className="hidden sm:inline">Profile</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Abmelden
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/auth">
+              <Button variant="outline" size="sm" className="flex items-center">
+                <User className="h-4 w-4 mr-1 md:mr-2" />
+                <span className="hidden sm:inline">Anmelden</span>
+              </Button>
+            </Link>
+          )}
+          
+          <Button variant="ghost" size="sm" className="md:hidden">
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
+      
+      {/* Mobile Search */}
+      {searchOpen && (
+        <div className="md:hidden px-4 pb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Videos suchen..."
+              className="pl-10 search-input w-full"
+            />
+          </div>
+        </div>
+      )}
     </header>
   );
 };

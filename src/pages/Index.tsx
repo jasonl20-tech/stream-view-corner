@@ -12,9 +12,9 @@ const Index = () => {
       <Header />
       <Hero />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Entdecke Videos</h2>
+      <main className="container mx-auto px-4 py-6 md:py-8">
+        <div className="mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Entdecke Videos</h2>
           <CategoryFilter 
             activeCategory={activeCategory}
             onCategoryChange={setActiveCategory}
