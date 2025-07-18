@@ -15,9 +15,9 @@
     --popover: 220 15% 12%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 271 81% 56%;
+    --primary: 0 70% 70%;
     --primary-foreground: 210 40% 98%;
-    --primary-glow: 271 91% 65%;
+    --primary-glow: 0 75% 80%;
 
     --secondary: 217 32% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -25,7 +25,7 @@
     --muted: 215 28% 17%;
     --muted-foreground: 217 10% 64%;
 
-    --accent: 240 100% 70%;
+    --accent: 0 65% 75%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
@@ -33,7 +33,7 @@
 
     --border: 217 32% 17%;
     --input: 217 32% 17%;
-    --ring: 271 81% 56%;
+    --ring: 0 70% 70%;
 
     --radius: 0.75rem;
 
@@ -43,15 +43,15 @@
     --video-hover: 220 15% 18%;
     --nav-bg: 220 15% 6%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(271 81% 56%), hsl(240 100% 70%));
+    /* Gradients mit Pastel Rot */
+    --gradient-primary: linear-gradient(135deg, hsl(0 70% 70%), hsl(0 65% 75%));
     --gradient-card: linear-gradient(145deg, hsl(220 15% 12%), hsl(220 15% 16%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%) 0%, hsl(271 81% 56% / 0.1) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%) 0%, hsl(0 70% 70% / 0.1) 100%);
     
-    /* Shadows */
-    --shadow-video: 0 10px 40px -10px hsl(271 81% 56% / 0.3);
+    /* Shadows mit Pastel Rot */
+    --shadow-video: 0 10px 40px -10px hsl(0 70% 70% / 0.3);
     --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 40px hsl(271 91% 65% / 0.4);
+    --shadow-glow: 0 0 40px hsl(0 75% 80% / 0.4);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
