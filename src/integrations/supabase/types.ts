@@ -41,6 +41,12 @@ export type Database = {
         }
         Relationships: []
       }
+      videocsv: {
+        Row: {}
+        Insert: {}
+        Update: {}
+        Relationships: []
+      }
       videos: {
         Row: {
           category: string
