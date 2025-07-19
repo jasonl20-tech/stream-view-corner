@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Layout } from "@/components/Layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -35,7 +36,16 @@ const Shorts = () => {
       if (data && data.length > 0) {
         // Wähle ein zufälliges Video aus
         const randomVideo = data[Math.floor(Math.random() * data.length)];
-        return randomVideo;
+        
+        // Füge Autoplay-Parameter zur embed URL hinzu
+        const autoplayUrl = randomVideo.embed.includes('?') 
+          ? `${randomVideo.embed}&autoplay=1&muted=1`
+          : `${randomVideo.embed}?autoplay=1&muted=1`;
+        
+        return {
+          ...randomVideo,
+          embed: autoplayUrl
+        };
       }
       return null;
     } catch (error) {
@@ -235,89 +245,95 @@ const Shorts = () => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black">
-        <div className="flex items-center justify-center h-full">
+      <Layout>
+        <div className="min-h-screen bg-black flex items-center justify-center">
           <Skeleton className="w-full max-w-md h-96 rounded-lg" />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-20 p-4 bg-gradient-to-b from-black/50 to-transparent">
-        <div className="flex justify-between items-center">
-          <h1 className="text-white text-xl font-bold">Shorts</h1>
-          <Button
-            onClick={fetchInitialVideos}
-            variant="ghost"
-            size="sm"
-            className="text-white hover:bg-white/20"
-          >
-            <RotateCcw className="h-4 w-4" />
-          </Button>
+    <Layout>
+      <div className="bg-black overflow-hidden" style={{ height: 'calc(100vh - 4rem)' }}>
+        {/* Shorts Header */}
+        <div className="absolute top-16 left-0 right-0 z-20 p-4 bg-gradient-to-b from-black/50 to-transparent">
+          <div className="flex justify-between items-center">
+            <h1 className="text-white text-xl font-bold">Shorts</h1>
+            <Button
+              onClick={fetchInitialVideos}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* Video Container */}
-      <div 
-        ref={containerRef}
-        className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {videos.map((video, index) => (
-          <div 
-            key={`${video.id}-${index}`}
-            data-index={index}
-            className="h-screen w-full snap-start relative flex items-center justify-center"
-          >
-            <iframe
-              ref={el => {
-                if (videoRefs.current) {
-                  videoRefs.current[index] = el;
-                }
-              }}
-              src={video.embed}
-              className="w-full h-full object-cover"
-              frameBorder="0"
-              allowFullScreen
-              title={video.titel}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            />
-            
-            {/* Video Info Overlay */}
-            <div className="absolute bottom-20 left-4 right-4 z-10">
-              <h3 className="text-white text-lg font-semibold leading-tight line-clamp-2 drop-shadow-lg">
-                {video.titel}
-              </h3>
-            </div>
+        {/* Video Container */}
+        <div 
+          ref={containerRef}
+          className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {videos.map((video, index) => (
+            <div 
+              key={`${video.id}-${index}`}
+              data-index={index}
+              className="w-full snap-start relative flex items-center justify-center"
+              style={{ height: 'calc(100vh - 4rem)' }}
+            >
+              <iframe
+                ref={el => {
+                  if (videoRefs.current) {
+                    videoRefs.current[index] = el;
+                  }
+                }}
+                src={video.embed}
+                className="w-full h-full object-cover"
+                frameBorder="0"
+                allowFullScreen
+                title={video.titel}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              />
+              
+              {/* Video Info Overlay */}
+              <div className="absolute bottom-20 left-4 right-4 z-10">
+                <h3 className="text-white text-lg font-semibold leading-tight line-clamp-2 drop-shadow-lg">
+                  {video.titel}
+                </h3>
+              </div>
 
-            {/* Video Counter */}
-            <div className="absolute bottom-4 right-4 z-10">
-              <div className="bg-black/50 text-white px-2 py-1 rounded-full text-sm">
-                {index + 1} {loadingMore && index === videos.length - 1 ? '(+∞)' : ''}
+              {/* Video Counter */}
+              <div className="absolute bottom-4 right-4 z-10">
+                <div className="bg-black/50 text-white px-2 py-1 rounded-full text-sm">
+                  {index + 1} {loadingMore && index === videos.length - 1 ? '(+∞)' : ''}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {/* Loading Indicator */}
-        {loadingMore && (
-          <div className="h-screen w-full snap-start relative flex items-center justify-center bg-gray-900">
-            <div className="text-white text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-              <p>Lädt neues Video...</p>
+          {/* Loading Indicator */}
+          {loadingMore && (
+            <div 
+              className="w-full snap-start relative flex items-center justify-center bg-gray-900"
+              style={{ height: 'calc(100vh - 4rem)' }}
+            >
+              <div className="text-white text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                <p>Lädt neues Video...</p>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Navigation Hints */}
-      <div className="absolute bottom-4 left-4 z-20 text-white/70 text-sm">
-        <p>↑↓ Pfeiltasten oder Scrollen • ∞ Unendlich</p>
+        {/* Navigation Hints */}
+        <div className="absolute bottom-4 left-4 z-20 text-white/70 text-sm">
+          <p>↑↓ Pfeiltasten oder Scrollen • ∞ Unendlich</p>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
