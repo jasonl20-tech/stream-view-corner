@@ -142,11 +142,11 @@ export const CategoryGrid = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="category-card">
-            <Skeleton className="w-full h-24 rounded-lg" />
-            <Skeleton className="h-4 w-full mt-2" />
+            <Skeleton className="w-full h-20 xs:h-22 sm:h-24 rounded-lg" />
+            <Skeleton className="h-3 sm:h-4 w-full mt-2" />
           </div>
         ))}
       </div>
@@ -154,20 +154,20 @@ export const CategoryGrid = () => {
   }
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Kategorien</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div className="mb-6 sm:mb-8">
+      <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Kategorien</h2>
+      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
         {categories.map((category) => (
           <div 
             key={category.id}
             className="category-card cursor-pointer group"
             onClick={() => handleCategoryClick(category.name)}
           >
-            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-primary/40 h-24 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/50 transition-all duration-300">
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-primary/40 h-16 xs:h-18 sm:h-20 md:h-22 lg:h-24 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/50 transition-all duration-300">
               {generatingImages.has(category.name) ? (
                 <div className="flex flex-col items-center justify-center text-primary-foreground">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mb-1"></div>
-                  <span className="text-xs">Generiere...</span>
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 border-b-2 border-white mb-0.5 sm:mb-1"></div>
+                  <span className="text-xs hidden sm:block">Generiere...</span>
                 </div>
               ) : category.image_url ? (
                 <img 
@@ -176,22 +176,22 @@ export const CategoryGrid = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
-                <div className="text-primary-foreground font-semibold text-lg">
+                <div className="text-primary-foreground font-semibold text-sm sm:text-base md:text-lg">
                   {category.name.charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
-            <h3 className="text-sm font-medium mt-2 text-center group-hover:text-primary transition-colors duration-300">
+            <h3 className="text-xs sm:text-sm font-medium mt-1.5 sm:mt-2 text-center group-hover:text-primary transition-colors duration-300 line-clamp-2">
               {category.name}
             </h3>
           </div>
         ))}
       </div>
       
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-4 sm:mt-6">
         <button 
           onClick={() => navigate('/kategorien')}
-          className="btn-primary px-6 py-3 rounded-lg font-medium hover:scale-105 transition-transform duration-200"
+          className="btn-primary px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium hover:scale-105 transition-transform duration-200 text-sm sm:text-base"
         >
           Siehe alle Kategorien
         </button>
