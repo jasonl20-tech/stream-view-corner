@@ -26,7 +26,7 @@ export const VideoCard = ({ id, title, thumbnail, duration, views, category, upl
         <img
           src={thumbnail}
           alt={title}
-          className="w-full h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -37,9 +37,6 @@ export const VideoCard = ({ id, title, thumbnail, duration, views, category, upl
         <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 bg-black/80 text-white text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded backdrop-blur-sm">
           <Clock className="inline h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
           <span className="text-xs">{duration}</span>
-        </div>
-        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-primary text-primary-foreground text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
-          {category}
         </div>
       </div>
       
