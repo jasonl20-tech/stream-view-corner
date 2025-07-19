@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from "react";
 
 export const AdCard = () => {
@@ -14,16 +15,14 @@ export const AdCard = () => {
       document.head.appendChild(jadsScript);
     }
 
-    // Initialize ads after a small delay to ensure DOM is ready
+    // Initialize ad after a small delay to ensure DOM is ready
     const timer = setTimeout(() => {
       if ((window as any).adsbyjuicy) {
         (window as any).adsbyjuicy.push({'adzone': 1080434});
-        (window as any).adsbyjuicy.push({'adzone': 1080431});
       } else {
-        // Initialize the global ads array and push ads
+        // Initialize the global ads array and push ad
         (window as any).adsbyjuicy = (window as any).adsbyjuicy || [];
         (window as any).adsbyjuicy.push({'adzone': 1080434});
-        (window as any).adsbyjuicy.push({'adzone': 1080431});
       }
     }, 100);
 
@@ -35,17 +34,11 @@ export const AdCard = () => {
   return (
     <div className="video-card group cursor-pointer transform transition-all duration-300 hover:scale-105">
       <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-primary/20 to-accent/20">
-        <div className="w-full h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 flex flex-col items-center justify-center p-2 space-y-1">
+        <div className="w-full h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 flex items-center justify-center p-2">
           <ins 
             id="1080434" 
             data-width="300" 
             data-height="100"
-            style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-          ></ins>
-          <ins 
-            id="1080431" 
-            data-width="300" 
-            data-height="250"
             style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
           ></ins>
         </div>
