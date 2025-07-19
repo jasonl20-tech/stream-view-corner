@@ -322,7 +322,7 @@ const Shorts = () => {
             >
               <div className="text-white text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                <p>Lädt neues Video...</p>
+                <p>Loading new video...</p>
               </div>
             </div>
           )}
@@ -330,7 +330,7 @@ const Shorts = () => {
 
         {/* Navigation Hints */}
         <div className="absolute bottom-4 left-4 z-20 text-white/70 text-sm">
-          <p>↑↓ Pfeiltasten oder Scrollen • ∞ Unendlich</p>
+          <p>↑↓ Arrow keys or scroll • ∞ Infinite</p>
         </div>
       </div>
     </Layout>

@@ -67,7 +67,7 @@ export const PopularToday = () => {
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-6">
           <Flame className="h-6 w-6 text-orange-500" />
-          <h2 className="text-2xl font-bold">Heute beliebt</h2>
+          <h2 className="text-2xl font-bold">Popular Today</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           {Array.from({ length: 20 }).map((_, i) => (
@@ -86,7 +86,7 @@ export const PopularToday = () => {
     <div className="mb-12">
       <div className="flex items-center gap-2 mb-6">
         <Flame className="h-6 w-6 text-orange-500" />
-        <h2 className="text-2xl font-bold">Heute beliebt</h2>
+        <h2 className="text-2xl font-bold">Popular Today</h2>
         <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
           HOT
         </div>
@@ -101,8 +101,8 @@ export const PopularToday = () => {
             thumbnail={video.thumbnail || video.image_1 || "/placeholder.svg"}
             duration={video.duration}
             views={formatViews(generateRandomViews())}
-            category={video.tag_1 || "Allgemein"}
-            uploadedAt="vor 2 Stunden"
+            category={video.tag_1 || "General"}
+            uploadedAt="2 hours ago"
           />
         ))}
       </div>

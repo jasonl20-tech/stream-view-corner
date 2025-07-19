@@ -155,7 +155,7 @@ export const CategoryGrid = () => {
 
   return (
     <div className="mb-6 sm:mb-8">
-      <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Kategorien</h2>
+      <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Categories</h2>
       <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
         {categories.map((category) => (
           <div 
@@ -167,7 +167,7 @@ export const CategoryGrid = () => {
               {generatingImages.has(category.name) ? (
                 <div className="flex flex-col items-center justify-center text-primary-foreground">
                   <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 border-b-2 border-white mb-0.5 sm:mb-1"></div>
-                  <span className="text-xs hidden sm:block">Generiere...</span>
+                  <span className="text-xs hidden sm:block">Generating...</span>
                 </div>
               ) : category.image_url ? (
                 <img 
@@ -193,7 +193,7 @@ export const CategoryGrid = () => {
           onClick={() => navigate('/kategorien')}
           className="btn-primary px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium hover:scale-105 transition-transform duration-200 text-sm sm:text-base"
         >
-          Siehe alle Kategorien
+          See All Categories
         </button>
       </div>
     </div>

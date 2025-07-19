@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Menu, User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useSearch } from "@/hooks/useSearch";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -15,10 +16,21 @@ import {
 export const Header = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
+  const { performSearch, loading: searchLoading } = useSearch();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      performSearch(searchQuery);
+      setSearchQuery("");
+      setSearchOpen(false);
+    }
   };
 
   return (
@@ -39,20 +51,23 @@ export const Header = () => {
               Home
             </Link>
             <Link to="/videos" className="text-foreground hover:text-primary transition-colors font-medium">
-              Alle Videos
+              All Videos
             </Link>
           </nav>
         </div>
 
         {/* Search Bar - Desktop */}
         <div className="hidden md:flex flex-1 max-w-md mx-8">
-          <div className="relative w-full">
+          <form onSubmit={handleSearch} className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Videos suchen..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search videos..."
               className="pl-10 search-input w-full"
+              disabled={searchLoading}
             />
-          </div>
+          </form>
         </div>
 
         {/* User Actions */}
@@ -86,7 +101,7 @@ export const Header = () => {
                 )}
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-2" />
-                  Abmelden
+                  Log Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -94,7 +109,7 @@ export const Header = () => {
             <Link to="/auth">
               <Button variant="outline" size="sm" className="flex items-center">
                 <User className="h-4 w-4 mr-1 md:mr-2" />
-                <span className="hidden sm:inline">Anmelden</span>
+                <span className="hidden sm:inline">Login</span>
               </Button>
             </Link>
           )}
@@ -108,13 +123,16 @@ export const Header = () => {
       {/* Mobile Search */}
       {searchOpen && (
         <div className="md:hidden px-4 pb-4">
-          <div className="relative">
+          <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Videos suchen..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search videos..."
               className="pl-10 search-input w-full"
+              disabled={searchLoading}
             />
-          </div>
+          </form>
         </div>
       )}
     </header>

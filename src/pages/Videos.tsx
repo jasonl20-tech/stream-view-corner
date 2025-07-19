@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { VideoCard } from "@/components/VideoCard";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -7,11 +8,13 @@ import { Video } from "@/hooks/useVideos";
 import { Layout } from "@/components/Layout";
 
 const Videos = () => {
+  const [searchParams] = useSearchParams();
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const videosPerPage = 40;
+  const searchQuery = searchParams.get('search') || "";
 
   const generateRandomViews = () => {
     return Math.floor(Math.random() * 900000) + 100000; // 100K to 1M views
@@ -26,17 +29,25 @@ const Videos = () => {
     return views.toString();
   };
 
-  const fetchVideos = async (page: number) => {
+  const fetchVideos = async (page: number, search?: string) => {
     try {
       setLoading(true);
       const from = (page - 1) * videosPerPage;
       const to = from + videosPerPage - 1;
 
-      const { data, error, count } = await supabase
+      let query = supabase
         .from('videos')
         .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
         .range(from, to);
+
+      if (search?.trim()) {
+        // Search in title and all tag fields
+        query = query.or(`titel.ilike.%${search}%,tag_1.ilike.%${search}%,tag_2.ilike.%${search}%,tag_3.ilike.%${search}%,tag_4.ilike.%${search}%,tag_5.ilike.%${search}%,tag_6.ilike.%${search}%,tag_7.ilike.%${search}%,tag_8.ilike.%${search}%`);
+      }
+
+      query = query.order('created_at', { ascending: false });
+
+      const { data, error, count } = await query;
 
       if (error) throw error;
 
@@ -50,8 +61,12 @@ const Videos = () => {
   };
 
   useEffect(() => {
-    fetchVideos(currentPage);
-  }, [currentPage]);
+    fetchVideos(currentPage, searchQuery);
+  }, [currentPage, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when search changes
+  }, [searchQuery]);
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -62,9 +77,18 @@ const Videos = () => {
     <Layout>
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold">Alle Videos</h1>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">
+              {searchQuery ? `Search Results for "${searchQuery}"` : "All Videos"}
+            </h1>
+            {searchQuery && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Found {videos.length} video{videos.length !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
           <p className="text-muted-foreground">
-            Seite {currentPage} von {totalPages}
+            Page {currentPage} of {totalPages}
           </p>
         </div>
 
@@ -95,8 +119,8 @@ const Videos = () => {
                   thumbnail={video.thumbnail || "/placeholder.svg"}
                   duration={video.duration}
                   views={formatViews(generateRandomViews())}
-                  category={video.tag_1 || 'Unbekannt'}
-                  uploadedAt={new Date(video.created_at).toLocaleDateString('de-DE', {
+                  category={video.tag_1 || 'Unknown'}
+                  uploadedAt={new Date(video.created_at).toLocaleDateString('en-US', {
                     day: 'numeric',
                     month: 'short'
                   })}
@@ -114,7 +138,7 @@ const Videos = () => {
                   className="flex items-center"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
-                  Zurück
+                  Back
                 </Button>
 
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -137,7 +161,7 @@ const Videos = () => {
                   disabled={currentPage === totalPages}
                   className="flex items-center"
                 >
-                  Weiter
+                  Next
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
