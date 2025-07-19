@@ -61,6 +61,13 @@ const Shorts = () => {
     );
   }
 
+  const createEmbedFromUrl = (url: string) => {
+    if (!url) return '';
+    
+    // Erstelle iframe aus URL
+    return `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -70,10 +77,23 @@ const Shorts = () => {
           <div className="max-w-md mx-auto space-y-6">
             {videos.map((video) => (
               <div key={video.id} className="w-full">
-                <div 
-                  className="w-full h-96 rounded-lg overflow-hidden bg-gray-900"
-                  dangerouslySetInnerHTML={{ __html: video.embed }}
-                />
+                <div className="w-full h-96 rounded-lg overflow-hidden bg-gray-900 border border-border">
+                  {video.embed ? (
+                    <iframe
+                      src={video.embed}
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      allowFullScreen
+                      className="rounded-lg"
+                      title={video.titel}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                      Video nicht verfügbar
+                    </div>
+                  )}
+                </div>
                 <h3 className="mt-4 text-lg font-semibold text-foreground line-clamp-2">
                   {video.titel}
                 </h3>
