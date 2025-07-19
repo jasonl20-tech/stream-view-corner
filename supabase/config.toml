@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.update-category-image]
 verify_jwt = false
+
+[functions.migrate-tags-to-categories]
+verify_jwt = false

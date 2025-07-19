@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Eye, EyeOff } from "lucide-react";
+import { Copy, Eye, EyeOff, Database } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [showApiKey, setShowApiKey] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const [isMigrating, setIsMigrating] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -42,6 +44,29 @@ const AdminDashboard = () => {
   const copyApiKey = () => {
     navigator.clipboard.writeText(apiKey);
     toast.success("API Key copied to clipboard!");
+  };
+
+  const migrateTags = async () => {
+    setIsMigrating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('migrate-tags-to-categories');
+      
+      if (error) {
+        toast.error(`Migration failed: ${error.message}`);
+        console.error('Migration error:', error);
+      } else {
+        const summary = data.summary;
+        toast.success(
+          `Migration completed! Created ${summary.newCategoriesCreated} new categories from ${summary.uniqueTags} unique tags.`
+        );
+        console.log('Migration result:', data);
+      }
+    } catch (error) {
+      toast.error('Migration failed: Network error');
+      console.error('Migration error:', error);
+    } finally {
+      setIsMigrating(false);
+    }
   };
 
   const projectUrl = window.location.origin;
@@ -92,6 +117,35 @@ const AdminDashboard = () => {
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Migration Tools */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              Migration Tools
+              <Badge variant="secondary">Admin</Badge>
+            </CardTitle>
+            <CardDescription>
+              Migrate existing video tags to categories
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Migrate Video Tags to Categories</Label>
+              <p className="text-sm text-muted-foreground">
+                This will scan all videos and create categories for any tags that don't already exist as categories.
+              </p>
+              <Button 
+                onClick={migrateTags}
+                disabled={isMigrating}
+                className="w-full"
+              >
+                <Database className="h-4 w-4 mr-2" />
+                {isMigrating ? "Migrating..." : "Migrate Tags to Categories"}
+              </Button>
             </div>
           </CardContent>
         </Card>
