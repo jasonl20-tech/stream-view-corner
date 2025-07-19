@@ -69,11 +69,11 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
         <VideoCard 
           key={video.id} 
           id={video.id}
-          title={video.title}
-          thumbnail={thumbnailMap[video.thumbnail_url || ''] || thumb1}
+          title={video.titel}
+          thumbnail={video.thumbnail || thumb1}
           duration={video.duration}
-          views={formatViews(video.views_count)}
-          category={video.category}
+          views="0"
+          category={video.tag_1 || 'Unbekannt'}
           uploadedAt={new Date(video.created_at).toLocaleDateString('de-DE', {
             day: 'numeric',
             month: 'short'

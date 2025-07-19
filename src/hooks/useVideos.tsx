@@ -3,13 +3,33 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface Video {
   id: string;
-  title: string;
-  description?: string;
-  thumbnail_url?: string;
-  video_url?: string;
+  titel: string;
+  describtion?: string;
+  thumbnail?: string;
+  embed?: string;
   duration: string;
-  views_count: number;
-  category: string;
+  image_1?: string;
+  image_2?: string;
+  image_3?: string;
+  image_4?: string;
+  image_5?: string;
+  image_6?: string;
+  image_7?: string;
+  image_8?: string;
+  image_9?: string;
+  image_10?: string;
+  image_11?: string;
+  image_12?: string;
+  image_13?: string;
+  image_14?: string;
+  tag_1?: string;
+  tag_2?: string;
+  tag_3?: string;
+  tag_4?: string;
+  tag_5?: string;
+  tag_6?: string;
+  tag_7?: string;
+  tag_8?: string;
   created_at: string;
   updated_at: string;
 }
@@ -28,7 +48,7 @@ export const useVideos = (category?: string) => {
         .order('created_at', { ascending: false });
 
       if (category && category !== 'Alle') {
-        query = query.eq('category', category);
+        query = query.eq('tag_1', category);
       }
 
       const { data, error } = await query;
@@ -51,6 +71,7 @@ export const useVideos = (category?: string) => {
   }, [category]);
 
   const formatViews = (views: number): string => {
+    if (!views || views === 0) return '0';
     if (views >= 1000000) {
       return `${(views / 1000000).toFixed(1)}M`;
     } else if (views >= 1000) {
@@ -59,32 +80,13 @@ export const useVideos = (category?: string) => {
     return views.toString();
   };
 
-  const incrementViews = async (videoId: string) => {
-    // Erst den aktuellen Wert abrufen, dann inkrementieren
-    const video = videos.find(v => v.id === videoId);
-    if (!video) return;
-
-    const { error } = await supabase
-      .from('videos')
-      .update({ views_count: video.views_count + 1 })
-      .eq('id', videoId);
-
-    if (!error) {
-      // Update local state
-      setVideos(prev => prev.map(video => 
-        video.id === videoId 
-          ? { ...video, views_count: video.views_count + 1 }
-          : video
-      ));
-    }
-  };
+  // Views werden nicht mehr getrackt da views_count Spalte entfernt wurde
 
   return {
     videos,
     loading,
     error,
     fetchVideos,
-    formatViews,
-    incrementViews
+    formatViews
   };
 };

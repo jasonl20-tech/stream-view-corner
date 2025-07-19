@@ -2,14 +2,14 @@ import { Button } from "@/components/ui/button";
 
 const categories = [
   "Alle",
-  "Gaming",
-  "Technologie", 
-  "Musik",
-  "Bildung",
-  "Sport",
-  "Entertainment",
-  "Lifestyle",
-  "Nachrichten"
+  "machine",
+  "toys",
+  "brunette", 
+  "teen",
+  "orgasm",
+  "natural",
+  "Toys",
+  "Pornstart"
 ];
 
 interface CategoryFilterProps {
