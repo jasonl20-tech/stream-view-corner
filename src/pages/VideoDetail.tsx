@@ -7,6 +7,7 @@ import { ArrowLeft, Clock, Tag } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createSlug } from "@/lib/slug";
 import { SimilarVideos } from "@/components/SimilarVideos";
+import { Layout } from "@/components/Layout";
 
 const VideoDetail = () => {
   const { title: titleSlug } = useParams();
@@ -55,7 +56,7 @@ const VideoDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <Layout>
         <div className="container mx-auto px-4 py-6">
           <Skeleton className="h-8 w-24 mb-6" />
           <Skeleton className="w-full h-96 mb-6" />
@@ -63,13 +64,13 @@ const VideoDetail = () => {
           <Skeleton className="h-4 w-full mb-2" />
           <Skeleton className="h-4 w-2/3" />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (error || !video) {
     return (
-      <div className="min-h-screen bg-background">
+      <Layout>
         <div className="container mx-auto px-4 py-6">
           <Button 
             variant="ghost" 
@@ -85,7 +86,7 @@ const VideoDetail = () => {
             </p>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
@@ -95,7 +96,7 @@ const VideoDetail = () => {
   ].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-background">
+    <Layout>
       <div className="container mx-auto px-4 py-6">
         <Button 
           variant="ghost" 
@@ -175,7 +176,7 @@ const VideoDetail = () => {
           <SimilarVideos currentVideo={video} />
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

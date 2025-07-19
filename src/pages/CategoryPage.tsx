@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Header } from "@/components/Header";
 import { VideoGrid } from "@/components/VideoGrid";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { decodeSlug } from "@/lib/slug";
+import { Layout } from "@/components/Layout";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -18,10 +18,8 @@ const CategoryPage = () => {
   }, [categoryName]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-6 md:py-8">
+    <Layout>
+      <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="flex items-center gap-4 mb-6">
           <Button 
             variant="outline" 
@@ -38,14 +36,8 @@ const CategoryPage = () => {
         </div>
 
         <VideoGrid activeCategory={decodedCategoryName} />
-      </main>
-      
-      <footer className="bg-nav-bg border-t border-border mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2024 hub4porn.com - Deine Video-Plattform</p>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </Layout>
   );
 };
 
