@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.generate-category-image]
 verify_jwt = false
+
+[functions.get-categories-with-images]
+verify_jwt = false
+
+[functions.update-category-image]
+verify_jwt = false
