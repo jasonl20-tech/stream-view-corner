@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { TagButtons } from "@/components/TagButtons";
 import { PopularToday } from "@/components/PopularToday";
+import { DiscoverAll } from "@/components/DiscoverAll";
 import { VideoGrid } from "@/components/VideoGrid";
 
 const Index = () => {
@@ -18,12 +19,7 @@ const Index = () => {
         
         <PopularToday />
         
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-6">
-            {activeTag === "Alle" ? "Alle Videos" : `Videos in "${activeTag}"`}
-          </h2>
-          <VideoGrid activeCategory={activeTag} />
-        </div>
+        <DiscoverAll />
       </main>
       
       <footer className="bg-nav-bg border-t border-border mt-16 py-8">

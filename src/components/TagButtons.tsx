@@ -39,7 +39,12 @@ export const TagButtons = ({ onTagSelect, activeTag }: TagButtonsProps) => {
         });
       });
 
-      setTags(Array.from(allTags).sort());
+      // Wähle 8 zufällige Tags aus
+      const shuffledTags = Array.from(allTags)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 8);
+      
+      setTags(shuffledTags);
     } catch (error) {
       console.error('Error fetching tags:', error);
     } finally {
@@ -63,7 +68,7 @@ export const TagButtons = ({ onTagSelect, activeTag }: TagButtonsProps) => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">Kategorien</h2>
+      <h2 className="text-xl font-semibold mb-4">Vorgeschlagene Kategorien</h2>
       <div className="flex flex-wrap gap-2">
         <Button
           variant={activeTag === "Alle" ? "default" : "outline"}

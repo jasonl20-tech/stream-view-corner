@@ -36,7 +36,7 @@ export const Header = () => {
             <Link to="/" className="text-foreground hover:text-primary transition-colors font-medium">
               Home
             </Link>
-            <Link to="/alle-videos" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/videos" className="text-foreground hover:text-primary transition-colors font-medium">
               Alle Videos
             </Link>
           </nav>

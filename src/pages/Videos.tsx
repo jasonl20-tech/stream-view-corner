@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Video } from "@/hooks/useVideos";
 
-const AllVideos = () => {
+const Videos = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -157,4 +157,4 @@ const AllVideos = () => {
   );
 };
 
-export default AllVideos;
+export default Videos;
