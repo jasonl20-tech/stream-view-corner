@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Video {
@@ -42,13 +42,17 @@ export const useVideos = (category?: string) => {
   const fetchVideos = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       let query = supabase
         .from('videos')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (category && category !== 'Alle') {
-        query = query.or(`tag_1.eq.${category},tag_2.eq.${category},tag_3.eq.${category},tag_4.eq.${category},tag_5.eq.${category},tag_6.eq.${category},tag_7.eq.${category},tag_8.eq.${category}`);
+        // Exakte case-insensitive Suche in allen Tag-Feldern
+        const categoryLower = category.toLowerCase();
+        query = query.or(`tag_1.ilike.${categoryLower},tag_2.ilike.${categoryLower},tag_3.ilike.${categoryLower},tag_4.ilike.${categoryLower},tag_5.ilike.${categoryLower},tag_6.ilike.${categoryLower},tag_7.ilike.${categoryLower},tag_8.ilike.${categoryLower}`);
       }
 
       const { data, error } = await query;
@@ -58,7 +62,22 @@ export const useVideos = (category?: string) => {
         return;
       }
 
-      setVideos(data || []);
+      // Zusätzliche Filterung im Frontend für exakte Matches (case-insensitive)
+      let filteredData = data || [];
+      if (category && category !== 'Alle') {
+        filteredData = (data || []).filter(video => {
+          const tags = [
+            video.tag_1, video.tag_2, video.tag_3, video.tag_4,
+            video.tag_5, video.tag_6, video.tag_7, video.tag_8
+          ].filter(Boolean);
+          
+          return tags.some(tag => 
+            tag && tag.toLowerCase() === category.toLowerCase()
+          );
+        });
+      }
+
+      setVideos(filteredData);
     } catch (err) {
       setError('Ein Fehler ist aufgetreten beim Laden der Videos');
     } finally {
@@ -70,17 +89,17 @@ export const useVideos = (category?: string) => {
     fetchVideos();
   }, [category]);
 
-  const formatViews = (views: number): string => {
-    if (!views || views === 0) return '0';
-    if (views >= 1000000) {
-      return `${(views / 1000000).toFixed(1)}M`;
-    } else if (views >= 1000) {
-      return `${(views / 1000).toFixed(0)}K`;
-    }
-    return views.toString();
-  };
-
-  // Views werden nicht mehr getrackt da views_count Spalte entfernt wurde
+  const formatViews = useMemo(() => {
+    return (views: number): string => {
+      if (!views || views === 0) return '0';
+      if (views >= 1000000) {
+        return `${(views / 1000000).toFixed(1)}M`;
+      } else if (views >= 1000) {
+        return `${(views / 1000).toFixed(0)}K`;
+      }
+      return views.toString();
+    };
+  }, []);
 
   return {
     videos,
