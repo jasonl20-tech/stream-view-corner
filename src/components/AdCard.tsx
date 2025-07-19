@@ -48,25 +48,29 @@ export const AdCard = () => {
   }, []);
 
   return (
-    <div 
-      ref={adRef}
-      className="bg-muted/30 rounded-xl border-2 border-dashed border-muted-foreground/20 flex flex-col items-center justify-center h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 p-2 space-y-2"
-    >
-      <div className="text-center">
-        <ins 
-          id="1080434" 
-          data-width="300" 
-          data-height="100"
-        ></ins>
+    <div className="video-card group cursor-pointer transform transition-all duration-300 hover:scale-105">
+      <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-primary/20 to-accent/20">
+        <div className="w-full h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 flex flex-col items-center justify-center p-2 space-y-1">
+          <ins 
+            id="1080434" 
+            data-width="300" 
+            data-height="100"
+            style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+          ></ins>
+          <ins 
+            id="1080431" 
+            data-width="300" 
+            data-height="250"
+            style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+          ></ins>
+        </div>
       </div>
-      <div className="text-center">
-        <ins 
-          id="1080431" 
-          data-width="300" 
-          data-height="250"
-        ></ins>
+      
+      <div className="p-2.5 sm:p-3 md:p-4 bg-card rounded-b-xl">
+        <p className="text-xs text-muted-foreground text-center font-medium">
+          Advertisement
+        </p>
       </div>
-      <p className="text-xs text-muted-foreground">Advertisement</p>
     </div>
   );
 };
