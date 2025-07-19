@@ -11,16 +11,16 @@ interface Category {
   description?: string;
 }
 
-export const CategoryGrid = () => {
+export const AllCategoriesGrid = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCategories();
+    fetchAllCategories();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchAllCategories = async () => {
     try {
       setLoading(true);
       
@@ -59,9 +59,8 @@ export const CategoryGrid = () => {
         };
       });
 
-      // Zeige nur 8 zufällige Kategorien auf der Startseite
-      const shuffled = categoryList.sort(() => 0.5 - Math.random());
-      setCategories(shuffled.slice(0, 8));
+      // Zeige alle Kategorien alphabetisch sortiert
+      setCategories(categoryList.sort((a, b) => a.name.localeCompare(b.name)));
     } catch (err) {
       console.error('Fehler beim Laden der Kategorien:', err);
     } finally {
@@ -77,7 +76,7 @@ export const CategoryGrid = () => {
   if (loading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: 18 }).map((_, i) => (
           <div key={i} className="category-card">
             <Skeleton className="w-full h-24 rounded-lg" />
             <Skeleton className="h-4 w-full mt-2" />
@@ -88,43 +87,31 @@ export const CategoryGrid = () => {
   }
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Kategorien</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        {categories.map((category) => (
-          <div 
-            key={category.id}
-            className="category-card cursor-pointer group"
-            onClick={() => handleCategoryClick(category.name)}
-          >
-            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-primary/40 h-24 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/50 transition-all duration-300">
-              {category.image_url ? (
-                <img 
-                  src={category.image_url} 
-                  alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              ) : (
-                <div className="text-primary-foreground font-semibold text-lg">
-                  {category.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
-            <h3 className="text-sm font-medium mt-2 text-center group-hover:text-primary transition-colors duration-300">
-              {category.name}
-            </h3>
-          </div>
-        ))}
-      </div>
-      
-      <div className="flex justify-center mt-6">
-        <button 
-          onClick={() => navigate('/kategorien')}
-          className="btn-primary px-6 py-3 rounded-lg font-medium hover:scale-105 transition-transform duration-200"
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      {categories.map((category) => (
+        <div 
+          key={category.id}
+          className="category-card cursor-pointer group"
+          onClick={() => handleCategoryClick(category.name)}
         >
-          Siehe alle Kategorien
-        </button>
-      </div>
+          <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-primary/40 h-24 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/50 transition-all duration-300">
+            {category.image_url ? (
+              <img 
+                src={category.image_url} 
+                alt={category.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div className="text-primary-foreground font-semibold text-lg">
+                {category.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <h3 className="text-sm font-medium mt-2 text-center group-hover:text-primary transition-colors duration-300">
+            {category.name}
+          </h3>
+        </div>
+      ))}
     </div>
   );
 };

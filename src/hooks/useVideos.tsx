@@ -48,7 +48,7 @@ export const useVideos = (category?: string) => {
         .order('created_at', { ascending: false });
 
       if (category && category !== 'Alle') {
-        query = query.eq('tag_1', category);
+        query = query.or(`tag_1.eq.${category},tag_2.eq.${category},tag_3.eq.${category},tag_4.eq.${category},tag_5.eq.${category},tag_6.eq.${category},tag_7.eq.${category},tag_8.eq.${category}`);
       }
 
       const { data, error } = await query;
