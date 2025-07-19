@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Layout } from "@/components/Layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -15,34 +14,75 @@ interface Video {
 const Shorts = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLIFrameElement | null)[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const fetchRandomVideos = async () => {
+  // Lade ein einzelnes zufälliges Video
+  const fetchRandomVideo = async (): Promise<Video | null> => {
     try {
-      setLoading(true);
-      // Hole 20 zufällige Videos mit embed content
       const { data, error } = await supabase
         .from('videos')
         .select('id, titel, embed, thumbnail')
         .not('embed', 'is', null)
         .not('embed', 'eq', '')
-        .limit(20);
+        .limit(1000); // Hole viele Videos für bessere Zufälligkeit
 
       if (error) throw error;
 
-      // Mische die Videos zufällig
-      const shuffledVideos = data?.sort(() => 0.5 - Math.random()) || [];
-      setVideos(shuffledVideos);
+      if (data && data.length > 0) {
+        // Wähle ein zufälliges Video aus
+        const randomVideo = data[Math.floor(Math.random() * data.length)];
+        return randomVideo;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching random video:', error);
+      return null;
+    }
+  };
+
+  // Lade mehrere zufällige Videos für den Start
+  const fetchInitialVideos = async () => {
+    try {
+      setLoading(true);
+      const initialVideos: Video[] = [];
+      
+      // Lade 3 initiale Videos
+      for (let i = 0; i < 3; i++) {
+        const video = await fetchRandomVideo();
+        if (video) {
+          initialVideos.push(video);
+        }
+      }
+      
+      setVideos(initialVideos);
       setCurrentVideoIndex(0);
     } catch (error) {
-      console.error('Error fetching random videos:', error);
+      console.error('Error fetching initial videos:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Lade ein neues Video nach
+  const loadMoreVideo = useCallback(async () => {
+    if (loadingMore) return;
+    
+    setLoadingMore(true);
+    const newVideo = await fetchRandomVideo();
+    
+    if (newVideo) {
+      setVideos(prev => [...prev, newVideo]);
+      // Erweitere videoRefs Array
+      videoRefs.current.push(null);
+    }
+    setLoadingMore(false);
+  }, [loadingMore]);
+
+  // Scroll zu einem bestimmten Video
   const scrollToVideo = (index: number) => {
     if (containerRef.current) {
       const videoElement = containerRef.current.children[index] as HTMLElement;
@@ -55,7 +95,8 @@ const Shorts = () => {
     }
   };
 
-  const handleScroll = () => {
+  // Handle Scroll Events
+  const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
 
     const container = containerRef.current;
@@ -65,39 +106,97 @@ const Shorts = () => {
     
     if (newIndex !== currentVideoIndex && newIndex < videos.length) {
       setCurrentVideoIndex(newIndex);
+      
+      // Wenn wir uns dem Ende nähern, lade ein neues Video
+      if (newIndex >= videos.length - 2) {
+        loadMoreVideo();
+      }
     }
-  };
+  }, [currentVideoIndex, videos.length, loadMoreVideo]);
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  // Keyboard Navigation
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'ArrowUp' && currentVideoIndex > 0) {
       event.preventDefault();
       const newIndex = currentVideoIndex - 1;
       setCurrentVideoIndex(newIndex);
       scrollToVideo(newIndex);
-    } else if (event.key === 'ArrowDown' && currentVideoIndex < videos.length - 1) {
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       const newIndex = currentVideoIndex + 1;
-      setCurrentVideoIndex(newIndex);
-      scrollToVideo(newIndex);
+      
+      // Wenn das nächste Video nicht existiert, lade es
+      if (newIndex >= videos.length) {
+        loadMoreVideo().then(() => {
+          setCurrentVideoIndex(newIndex);
+          // Warte kurz und scrolle dann
+          setTimeout(() => scrollToVideo(newIndex), 100);
+        });
+      } else {
+        setCurrentVideoIndex(newIndex);
+        scrollToVideo(newIndex);
+      }
     }
-  };
+  }, [currentVideoIndex, videos.length, loadMoreVideo]);
 
+  // Setup Intersection Observer für automatisches Laden
   useEffect(() => {
-    fetchRandomVideos();
-  }, []);
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
 
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const videoElement = entry.target as HTMLElement;
+            const index = parseInt(videoElement.dataset.index || '0');
+            
+            // Wenn wir das vorletzte Video sehen, lade ein neues
+            if (index >= videos.length - 2) {
+              loadMoreVideo();
+            }
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [videos.length, loadMoreVideo]);
+
+  // Observe Video Elements
+  useEffect(() => {
+    if (observerRef.current && containerRef.current) {
+      const videoElements = containerRef.current.children;
+      Array.from(videoElements).forEach((element) => {
+        observerRef.current?.observe(element);
+      });
+    }
+  }, [videos]);
+
+  // Event Listeners
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
       return () => container.removeEventListener('scroll', handleScroll);
     }
-  }, [currentVideoIndex, videos.length]);
+  }, [handleScroll]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentVideoIndex, videos.length]);
+  }, [handleKeyDown]);
+
+  // Initial Load
+  useEffect(() => {
+    fetchInitialVideos();
+  }, []);
 
   if (loading) {
     return (
@@ -111,12 +210,12 @@ const Shorts = () => {
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Header mit Logo und Reload Button */}
+      {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-20 p-4 bg-gradient-to-b from-black/50 to-transparent">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-xl font-bold">Shorts</h1>
           <Button
-            onClick={fetchRandomVideos}
+            onClick={fetchInitialVideos}
             variant="ghost"
             size="sm"
             className="text-white hover:bg-white/20"
@@ -134,11 +233,16 @@ const Shorts = () => {
       >
         {videos.map((video, index) => (
           <div 
-            key={video.id} 
+            key={`${video.id}-${index}`}
+            data-index={index}
             className="h-screen w-full snap-start relative flex items-center justify-center"
           >
             <iframe
-              ref={el => videoRefs.current[index] = el}
+              ref={el => {
+                if (videoRefs.current) {
+                  videoRefs.current[index] = el;
+                }
+              }}
               src={video.embed}
               className="w-full h-full object-cover"
               frameBorder="0"
@@ -157,16 +261,26 @@ const Shorts = () => {
             {/* Video Counter */}
             <div className="absolute bottom-4 right-4 z-10">
               <div className="bg-black/50 text-white px-2 py-1 rounded-full text-sm">
-                {index + 1} / {videos.length}
+                {index + 1} {loadingMore && index === videos.length - 1 ? '(+∞)' : ''}
               </div>
             </div>
           </div>
         ))}
+
+        {/* Loading Indicator */}
+        {loadingMore && (
+          <div className="h-screen w-full snap-start relative flex items-center justify-center bg-gray-900">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p>Lädt neues Video...</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Navigation Hints */}
       <div className="absolute bottom-4 left-4 z-20 text-white/70 text-sm">
-        <p>↑↓ Pfeiltasten oder Scrollen</p>
+        <p>↑↓ Pfeiltasten oder Scrollen • ∞ Unendlich</p>
       </div>
     </div>
   );
