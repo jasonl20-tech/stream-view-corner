@@ -2,3 +2,6 @@ project_id = "cpushnwxfdvqlglzhxcb"
 
 [functions.add-video]
 verify_jwt = false
+
+[functions.generate-category-image]
+verify_jwt = false
