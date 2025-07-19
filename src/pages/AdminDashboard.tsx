@@ -108,7 +108,7 @@ const AdminDashboard = () => {
             <div className="space-y-2">
               <Label>Endpoint</Label>
               <code className="block p-2 bg-muted rounded text-sm">
-                POST {projectUrl}/api/add-video
+                POST https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video
               </code>
             </div>
             
@@ -125,7 +125,7 @@ const AdminDashboard = () => {
               <Textarea
                 readOnly
                 rows={20}
-                value={`curl -X POST "${projectUrl}/api/add-video" \\
+                value={`curl -X POST "https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video" \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${apiKey}" \\
   -d '{
