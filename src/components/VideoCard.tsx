@@ -1,4 +1,5 @@
 import { Play, Clock, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface VideoCardProps {
   id: string;
@@ -10,9 +11,15 @@ interface VideoCardProps {
   uploadedAt: string;
 }
 
-export const VideoCard = ({ title, thumbnail, duration, views, category, uploadedAt }: VideoCardProps) => {
+export const VideoCard = ({ id, title, thumbnail, duration, views, category, uploadedAt }: VideoCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/video/${id}`);
+  };
+
   return (
-    <div className="video-card group cursor-pointer">
+    <div className="video-card group cursor-pointer" onClick={handleClick}>
       <div className="relative overflow-hidden rounded-t-lg">
         <img
           src={thumbnail}
