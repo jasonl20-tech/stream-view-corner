@@ -119,6 +119,33 @@ Deno.serve(async (req) => {
       image_14: videoData.image_14 || null,
     };
 
+    // Extract all tags and add them as categories if they don't exist
+    const tags = [
+      videoData.tag_1,
+      videoData.tag_2,
+      videoData.tag_3,
+      videoData.tag_4,
+      videoData.tag_5,
+      videoData.tag_6,
+      videoData.tag_7,
+      videoData.tag_8,
+    ].filter(tag => tag && tag.trim() !== '');
+
+    // Add categories for each tag if they don't exist
+    for (const tag of tags) {
+      const { data: existingCategory } = await supabaseClient
+        .from('categories')
+        .select('id')
+        .eq('name', tag.trim())
+        .single();
+
+      if (!existingCategory) {
+        await supabaseClient
+          .from('categories')
+          .insert({ name: tag.trim() });
+      }
+    }
+
     // Insert video into database
     const { data, error } = await supabaseClient
       .from('videos')
