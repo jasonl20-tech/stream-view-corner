@@ -1,4 +1,5 @@
 import { VideoCard } from "./VideoCard";
+import { AdCard } from "./AdCard";
 import { useVideos } from "@/hooks/useVideos";
 import { Skeleton } from "@/components/ui/skeleton";
 import thumb1 from "@/assets/thumb1.jpg";
@@ -63,23 +64,39 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
     );
   }
 
+  // Create array with ads inserted every 6th position
+  const videosWithAds = [];
+  videos.forEach((video, index) => {
+    videosWithAds.push(video);
+    if ((index + 1) % 6 === 0) {
+      videosWithAds.push({ id: `ad-${index}`, isAd: true });
+    }
+  });
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-      {videos.map((video) => (
-        <VideoCard 
-          key={video.id} 
-          id={video.id}
-          title={video.titel}
-          thumbnail={video.thumbnail || thumb1}
-          duration={video.duration}
-          views="0"
-          category={video.tag_1 || 'Unbekannt'}
-          uploadedAt={new Date(video.created_at).toLocaleDateString('de-DE', {
-            day: 'numeric',
-            month: 'short'
-          })}
-        />
-      ))}
+      {videosWithAds.map((item) => {
+        if (item.isAd) {
+          return <AdCard key={item.id} />;
+        }
+        
+        const video = item as any;
+        return (
+          <VideoCard 
+            key={video.id} 
+            id={video.id}
+            title={video.titel}
+            thumbnail={video.thumbnail || thumb1}
+            duration={video.duration}
+            views="0"
+            category={video.tag_1 || 'Unknown'}
+            uploadedAt={new Date(video.created_at).toLocaleDateString('en-US', {
+              day: 'numeric',
+              month: 'short'
+            })}
+          />
+        );
+      })}
     </div>
   );
 };

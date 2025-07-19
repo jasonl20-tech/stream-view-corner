@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { VideoCard } from "./VideoCard";
+import { AdCard } from "./AdCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Video } from "@/hooks/useVideos";
 import { Flame } from "lucide-react";
@@ -93,18 +94,35 @@ export const PopularToday = () => {
       </div>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-        {videos.map((video) => (
-          <VideoCard
-            key={video.id}
-            id={video.id}
-            title={video.titel}
-            thumbnail={video.thumbnail || video.image_1 || "/placeholder.svg"}
-            duration={video.duration}
-            views={formatViews(generateRandomViews())}
-            category={video.tag_1 || "General"}
-            uploadedAt="2 hours ago"
-          />
-        ))}
+        {(() => {
+          const videosWithAds = [];
+          videos.forEach((video, index) => {
+            videosWithAds.push(video);
+            if ((index + 1) % 6 === 0) {
+              videosWithAds.push({ id: `ad-${index}`, isAd: true });
+            }
+          });
+          
+          return videosWithAds.map((item) => {
+            if (item.isAd) {
+              return <AdCard key={item.id} />;
+            }
+            
+            const video = item as Video;
+            return (
+              <VideoCard
+                key={video.id}
+                id={video.id}
+                title={video.titel}
+                thumbnail={video.thumbnail || video.image_1 || "/placeholder.svg"}
+                duration={video.duration}
+                views={formatViews(generateRandomViews())}
+                category={video.tag_1 || "General"}
+                uploadedAt="2 hours ago"
+              />
+            );
+          });
+        })()}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { VideoCard } from "@/components/VideoCard";
+import { AdCard } from "@/components/AdCard";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,7 +94,7 @@ const Videos = () => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             {Array.from({ length: videosPerPage }).map((_, i) => (
               <div key={i} className="video-card">
                 <div className="w-full h-32 bg-muted rounded-t-lg animate-pulse" />
@@ -110,22 +111,39 @@ const Videos = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-8">
-              {videos.map((video) => (
-                <VideoCard
-                  key={video.id}
-                  id={video.id}
-                  title={video.titel}
-                  thumbnail={video.thumbnail || "/placeholder.svg"}
-                  duration={video.duration}
-                  views={formatViews(generateRandomViews())}
-                  category={video.tag_1 || 'Unknown'}
-                  uploadedAt={new Date(video.created_at).toLocaleDateString('en-US', {
-                    day: 'numeric',
-                    month: 'short'
-                  })}
-                />
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-8">
+              {(() => {
+                const videosWithAds = [];
+                videos.forEach((video, index) => {
+                  videosWithAds.push(video);
+                  if ((index + 1) % 6 === 0) {
+                    videosWithAds.push({ id: `ad-${index}`, isAd: true });
+                  }
+                });
+                
+                return videosWithAds.map((item) => {
+                  if (item.isAd) {
+                    return <AdCard key={item.id} />;
+                  }
+                  
+                  const video = item as Video;
+                  return (
+                    <VideoCard
+                      key={video.id}
+                      id={video.id}
+                      title={video.titel}
+                      thumbnail={video.thumbnail || "/placeholder.svg"}
+                      duration={video.duration}
+                      views={formatViews(generateRandomViews())}
+                      category={video.tag_1 || 'Unknown'}
+                      uploadedAt={new Date(video.created_at).toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'short'
+                      })}
+                    />
+                  );
+                });
+              })()}
             </div>
 
             {/* Pagination */}
