@@ -27,9 +27,11 @@ export const Header = () => {
         {/* Logo */}
         <div className="flex items-center space-x-6">
           <Link to="/">
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              hub4porn.com
-            </h1>
+            <img 
+              src="/lovable-uploads/80561d0a-875a-417e-8cd0-902471b094f3.png" 
+              alt="hub4porn.com Logo" 
+              className="h-8 md:h-10 w-auto"
+            />
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
