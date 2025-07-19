@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, Tag } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createSlug } from "@/lib/slug";
+import { SimilarVideos } from "@/components/SimilarVideos";
 
 const VideoDetail = () => {
   const { title: titleSlug } = useParams();
@@ -169,6 +170,9 @@ const VideoDetail = () => {
               </div>
             )}
           </div>
+
+          {/* Ähnliche Videos */}
+          <SimilarVideos currentVideo={video} />
         </div>
       </div>
     </div>
