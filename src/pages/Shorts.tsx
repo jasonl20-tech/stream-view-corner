@@ -105,6 +105,9 @@ const Shorts = () => {
     const newIndex = Math.round(scrollTop / videoHeight);
     
     if (newIndex !== currentVideoIndex && newIndex < videos.length) {
+      // Stoppe das vorherige Video
+      stopVideo(currentVideoIndex);
+      
       setCurrentVideoIndex(newIndex);
       
       // Wenn wir uns dem Ende nähern, lade ein neues Video
@@ -114,16 +117,48 @@ const Shorts = () => {
     }
   }, [currentVideoIndex, videos.length, loadMoreVideo]);
 
+  // Stoppe ein Video durch iframe reload
+  const stopVideo = (index: number) => {
+    const iframe = videoRefs.current[index];
+    if (iframe && iframe.src) {
+      const currentSrc = iframe.src;
+      iframe.src = 'about:blank'; // Stoppe das Video
+      setTimeout(() => {
+        if (iframe) {
+          iframe.src = currentSrc; // Lade es wieder, aber pausiert
+        }
+      }, 100);
+    }
+  };
+
+  // Starte/Fokussiere ein Video
+  const focusVideo = (index: number) => {
+    // Stoppe alle anderen Videos
+    videoRefs.current.forEach((iframe, i) => {
+      if (i !== index && iframe) {
+        const currentSrc = iframe.src;
+        iframe.src = 'about:blank';
+        setTimeout(() => {
+          if (iframe) {
+            iframe.src = currentSrc;
+          }
+        }, 100);
+      }
+    });
+  };
+
   // Keyboard Navigation
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'ArrowUp' && currentVideoIndex > 0) {
       event.preventDefault();
       const newIndex = currentVideoIndex - 1;
+      stopVideo(currentVideoIndex); // Stoppe aktuelles Video
       setCurrentVideoIndex(newIndex);
       scrollToVideo(newIndex);
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       const newIndex = currentVideoIndex + 1;
+      stopVideo(currentVideoIndex); // Stoppe aktuelles Video
       
       // Wenn das nächste Video nicht existiert, lade es
       if (newIndex >= videos.length) {
