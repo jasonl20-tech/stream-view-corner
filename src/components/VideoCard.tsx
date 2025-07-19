@@ -26,7 +26,7 @@ export const VideoCard = ({ id, title, thumbnail, duration, views, category, upl
         <img
           src={thumbnail}
           alt={title}
-          className="w-full h-32 xs:h-36 sm:h-40 md:h-44 lg:h-48 xl:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

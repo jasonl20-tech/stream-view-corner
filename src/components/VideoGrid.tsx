@@ -30,7 +30,7 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="video-card">
-            <Skeleton className="w-full h-32 xs:h-36 sm:h-40 md:h-44 lg:h-48 xl:h-52 rounded-t-lg" />
+            <Skeleton className="w-full h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 rounded-t-lg" />
             <div className="p-2.5 sm:p-3 md:p-4 space-y-2 sm:space-y-3">
               <Skeleton className="h-3 sm:h-4 w-full" />
               <Skeleton className="h-3 sm:h-4 w-3/4" />
