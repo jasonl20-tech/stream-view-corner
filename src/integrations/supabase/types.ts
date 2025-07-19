@@ -49,40 +49,100 @@ export type Database = {
       }
       videos: {
         Row: {
-          category: string
           created_at: string
-          description: string | null
+          describtion: string | null
           duration: string
+          embed: string | null
           id: string
-          thumbnail_url: string | null
-          title: string
+          image_1: string | null
+          image_10: string | null
+          image_11: string | null
+          image_12: string | null
+          image_13: string | null
+          image_14: string | null
+          image_2: string | null
+          image_3: string | null
+          image_4: string | null
+          image_5: string | null
+          image_6: string | null
+          image_7: string | null
+          image_8: string | null
+          image_9: string | null
+          tag_1: string | null
+          tag_2: string | null
+          tag_3: string | null
+          tag_4: string | null
+          tag_5: string | null
+          tag_6: string | null
+          tag_7: string | null
+          tag_8: string | null
+          thumbnail: string | null
+          titel: string
           updated_at: string
-          video_url: string | null
-          views_count: number | null
         }
         Insert: {
-          category: string
           created_at?: string
-          description?: string | null
+          describtion?: string | null
           duration: string
+          embed?: string | null
           id?: string
-          thumbnail_url?: string | null
-          title: string
+          image_1?: string | null
+          image_10?: string | null
+          image_11?: string | null
+          image_12?: string | null
+          image_13?: string | null
+          image_14?: string | null
+          image_2?: string | null
+          image_3?: string | null
+          image_4?: string | null
+          image_5?: string | null
+          image_6?: string | null
+          image_7?: string | null
+          image_8?: string | null
+          image_9?: string | null
+          tag_1?: string | null
+          tag_2?: string | null
+          tag_3?: string | null
+          tag_4?: string | null
+          tag_5?: string | null
+          tag_6?: string | null
+          tag_7?: string | null
+          tag_8?: string | null
+          thumbnail?: string | null
+          titel: string
           updated_at?: string
-          video_url?: string | null
-          views_count?: number | null
         }
         Update: {
-          category?: string
           created_at?: string
-          description?: string | null
+          describtion?: string | null
           duration?: string
+          embed?: string | null
           id?: string
-          thumbnail_url?: string | null
-          title?: string
+          image_1?: string | null
+          image_10?: string | null
+          image_11?: string | null
+          image_12?: string | null
+          image_13?: string | null
+          image_14?: string | null
+          image_2?: string | null
+          image_3?: string | null
+          image_4?: string | null
+          image_5?: string | null
+          image_6?: string | null
+          image_7?: string | null
+          image_8?: string | null
+          image_9?: string | null
+          tag_1?: string | null
+          tag_2?: string | null
+          tag_3?: string | null
+          tag_4?: string | null
+          tag_5?: string | null
+          tag_6?: string | null
+          tag_7?: string | null
+          tag_8?: string | null
+          thumbnail?: string | null
+          titel?: string
           updated_at?: string
-          video_url?: string | null
-          views_count?: number | null
         }
         Relationships: []
       }
