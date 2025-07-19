@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Play, TrendingUp } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
 
 export const Hero = () => {
   return (
     <section className="relative h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] flex items-center justify-center overflow-hidden">
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        style={{ backgroundImage: `url(/lovable-uploads/c5095cf5-b5c9-469f-adb7-634874730766.png)` }}
       />
       <div className="absolute inset-0 hero-gradient" />
       
