@@ -50,34 +50,39 @@ export const useVideos = (category?: string) => {
         .order('created_at', { ascending: false });
 
       if (category && category !== 'Alle') {
-        // Exakte case-insensitive Suche in allen Tag-Feldern
-        const categoryLower = category.toLowerCase();
-        query = query.or(`tag_1.ilike.${categoryLower},tag_2.ilike.${categoryLower},tag_3.ilike.${categoryLower},tag_4.ilike.${categoryLower},tag_5.ilike.${categoryLower},tag_6.ilike.${categoryLower},tag_7.ilike.${categoryLower},tag_8.ilike.${categoryLower}`);
-      }
+        // Hole alle Videos und filtere sie im Frontend für exakte Kontrolle
+        const { data, error } = await query;
 
-      const { data, error } = await query;
+        if (error) {
+          setError(error.message);
+          return;
+        }
 
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      // Zusätzliche Filterung im Frontend für exakte Matches (case-insensitive)
-      let filteredData = data || [];
-      if (category && category !== 'Alle') {
-        filteredData = (data || []).filter(video => {
+        // Exakte Filterung im Frontend für genaue Kontrolle
+        const filteredData = (data || []).filter(video => {
           const tags = [
             video.tag_1, video.tag_2, video.tag_3, video.tag_4,
             video.tag_5, video.tag_6, video.tag_7, video.tag_8
-          ].filter(Boolean);
+          ].filter(Boolean); // Entferne null/undefined Werte
           
           return tags.some(tag => 
             tag && tag.toLowerCase() === category.toLowerCase()
           );
         });
-      }
 
-      setVideos(filteredData);
+        console.log(`Kategorie: ${category}, Videos gefunden: ${filteredData.length}`);
+        setVideos(filteredData);
+      } else {
+        // Für "Alle" - zeige alle Videos
+        const { data, error } = await query;
+
+        if (error) {
+          setError(error.message);
+          return;
+        }
+
+        setVideos(data || []);
+      }
     } catch (err) {
       setError('Ein Fehler ist aufgetreten beim Laden der Videos');
     } finally {
