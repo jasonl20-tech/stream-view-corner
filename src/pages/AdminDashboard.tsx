@@ -124,7 +124,7 @@ const AdminDashboard = () => {
               <Label>Example curl command</Label>
               <Textarea
                 readOnly
-                rows={12}
+                rows={20}
                 value={`curl -X POST "${projectUrl}/api/add-video" \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${apiKey}" \\
@@ -134,8 +134,28 @@ const AdminDashboard = () => {
     "duration": "5:30",
     "embed": "<iframe>...</iframe>",
     "thumbnail": "https://example.com/thumb.jpg",
-    "tags": ["tag1", "tag2", "tag3"],
-    "images": ["https://example.com/img1.jpg"]
+    "tag_1": "first tag",
+    "tag_2": "second tag",
+    "tag_3": "third tag",
+    "tag_4": "fourth tag",
+    "tag_5": "fifth tag",
+    "tag_6": "sixth tag",
+    "tag_7": "seventh tag",
+    "tag_8": "eighth tag",
+    "image_1": "https://example.com/img1.jpg",
+    "image_2": "https://example.com/img2.jpg",
+    "image_3": "https://example.com/img3.jpg",
+    "image_4": "https://example.com/img4.jpg",
+    "image_5": "https://example.com/img5.jpg",
+    "image_6": "https://example.com/img6.jpg",
+    "image_7": "https://example.com/img7.jpg",
+    "image_8": "https://example.com/img8.jpg",
+    "image_9": "https://example.com/img9.jpg",
+    "image_10": "https://example.com/img10.jpg",
+    "image_11": "https://example.com/img11.jpg",
+    "image_12": "https://example.com/img12.jpg",
+    "image_13": "https://example.com/img13.jpg",
+    "image_14": "https://example.com/img14.jpg"
   }'`}
                 className="font-mono text-xs"
               />
@@ -155,8 +175,8 @@ const AdminDashboard = () => {
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• <code>describtion</code> - Description (string)</li>
                 <li>• <code>thumbnail</code> - Thumbnail URL (string)</li>
-                <li>• <code>tags</code> - Array of up to 8 tags (string[])</li>
-                <li>• <code>images</code> - Array of up to 14 image URLs (string[])</li>
+                <li>• <code>tag_1</code> to <code>tag_8</code> - Individual tags (string)</li>
+                <li>• <code>image_1</code> to <code>image_14</code> - Individual image URLs (string)</li>
               </ul>
             </div>
           </CardContent>

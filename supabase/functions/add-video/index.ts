@@ -11,8 +11,28 @@ interface VideoData {
   duration: string;
   embed: string;
   thumbnail?: string;
-  tags?: string[];
-  images?: string[];
+  tag_1?: string;
+  tag_2?: string;
+  tag_3?: string;
+  tag_4?: string;
+  tag_5?: string;
+  tag_6?: string;
+  tag_7?: string;
+  tag_8?: string;
+  image_1?: string;
+  image_2?: string;
+  image_3?: string;
+  image_4?: string;
+  image_5?: string;
+  image_6?: string;
+  image_7?: string;
+  image_8?: string;
+  image_9?: string;
+  image_10?: string;
+  image_11?: string;
+  image_12?: string;
+  image_13?: string;
+  image_14?: string;
 }
 
 Deno.serve(async (req) => {
@@ -68,30 +88,36 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Prepare data for insertion
+    // Prepare data for insertion - support all columns
     const insertData: any = {
       titel: videoData.titel,
       describtion: videoData.describtion || null,
       duration: videoData.duration,
       embed: videoData.embed,
       thumbnail: videoData.thumbnail || null,
+      tag_1: videoData.tag_1 || null,
+      tag_2: videoData.tag_2 || null,
+      tag_3: videoData.tag_3 || null,
+      tag_4: videoData.tag_4 || null,
+      tag_5: videoData.tag_5 || null,
+      tag_6: videoData.tag_6 || null,
+      tag_7: videoData.tag_7 || null,
+      tag_8: videoData.tag_8 || null,
+      image_1: videoData.image_1 || null,
+      image_2: videoData.image_2 || null,
+      image_3: videoData.image_3 || null,
+      image_4: videoData.image_4 || null,
+      image_5: videoData.image_5 || null,
+      image_6: videoData.image_6 || null,
+      image_7: videoData.image_7 || null,
+      image_8: videoData.image_8 || null,
+      image_9: videoData.image_9 || null,
+      image_10: videoData.image_10 || null,
+      image_11: videoData.image_11 || null,
+      image_12: videoData.image_12 || null,
+      image_13: videoData.image_13 || null,
+      image_14: videoData.image_14 || null,
     };
-
-    // Handle tags (up to 8)
-    if (videoData.tags && Array.isArray(videoData.tags)) {
-      const tags = videoData.tags.slice(0, 8);
-      tags.forEach((tag, index) => {
-        insertData[`tag_${index + 1}`] = tag;
-      });
-    }
-
-    // Handle images (up to 14)
-    if (videoData.images && Array.isArray(videoData.images)) {
-      const images = videoData.images.slice(0, 14);
-      images.forEach((image, index) => {
-        insertData[`image_${index + 1}`] = image;
-      });
-    }
 
     // Insert video into database
     const { data, error } = await supabaseClient
