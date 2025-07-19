@@ -5,9 +5,10 @@ import { Video } from "@/hooks/useVideos";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, Tag } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { createSlug } from "@/lib/slug";
 
 const VideoDetail = () => {
-  const { id } = useParams();
+  const { title: titleSlug } = useParams();
   const navigate = useNavigate();
   const [video, setVideo] = useState<Video | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,22 +16,32 @@ const VideoDetail = () => {
 
   useEffect(() => {
     const fetchVideo = async () => {
-      if (!id) return;
+      if (!titleSlug) return;
 
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        
+        // Hole alle Videos und finde das richtige basierend auf dem Slug
+        const { data: videos, error } = await supabase
           .from('videos')
-          .select('*')
-          .eq('id', id)
-          .single();
+          .select('*');
 
         if (error) {
           setError(error.message);
           return;
         }
 
-        setVideo(data);
+        // Finde das Video mit dem passenden Slug
+        const matchedVideo = videos?.find(video => 
+          createSlug(video.titel) === titleSlug
+        );
+
+        if (!matchedVideo) {
+          setError('Video nicht gefunden');
+          return;
+        }
+
+        setVideo(matchedVideo);
       } catch (err) {
         setError('Fehler beim Laden des Videos');
       } finally {
@@ -39,7 +50,7 @@ const VideoDetail = () => {
     };
 
     fetchVideo();
-  }, [id]);
+  }, [titleSlug]);
 
   if (loading) {
     return (

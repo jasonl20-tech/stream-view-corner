@@ -1,5 +1,6 @@
 import { Play, Clock, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { createSlug } from "@/lib/slug";
 
 interface VideoCardProps {
   id: string;
@@ -15,7 +16,8 @@ export const VideoCard = ({ id, title, thumbnail, duration, views, category, upl
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/video/${id}`);
+    const slug = createSlug(title);
+    navigate(`/videos/${slug}`);
   };
 
   return (
