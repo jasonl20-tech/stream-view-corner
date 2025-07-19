@@ -9,6 +9,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Videos from "./pages/Videos";
 import CategoryPage from "./pages/CategoryPage";
 import AllCategoriesPage from "./pages/AllCategoriesPage";
+import Shorts from "./pages/Shorts";
 
 const App = () => (
   <TooltipProvider>
@@ -19,6 +20,7 @@ const App = () => (
       <Route path="/videos/:title" element={<VideoDetail />} />
       <Route path="/kategorien" element={<AllCategoriesPage />} />
       <Route path="/kategorie/:categoryName" element={<CategoryPage />} />
+      <Route path="/shorts" element={<Shorts />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />
