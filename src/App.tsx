@@ -5,6 +5,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import VideoDetail from "./pages/VideoDetail";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const App = () => (
   <TooltipProvider>
@@ -13,6 +14,7 @@ const App = () => (
       <Route path="/" element={<Index />} />
       <Route path="/video/:id" element={<VideoDetail />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </TooltipProvider>

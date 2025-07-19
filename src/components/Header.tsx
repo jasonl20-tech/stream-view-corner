@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu, User, LogOut } from "lucide-react";
+import { Search, Menu, User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -13,6 +14,7 @@ import {
 
 export const Header = () => {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleSignOut = async () => {
@@ -63,6 +65,14 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex w-full">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Abmelden
