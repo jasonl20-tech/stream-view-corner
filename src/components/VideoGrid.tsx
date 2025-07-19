@@ -27,8 +27,8 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="video-card">
             <Skeleton className="w-full h-48 rounded-t-lg" />
             <div className="p-4 space-y-3">
@@ -64,7 +64,7 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       {videos.map((video) => (
         <VideoCard 
           key={video.id} 

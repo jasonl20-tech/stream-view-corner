@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import VideoDetail from "./pages/VideoDetail";
 import AdminDashboard from "./pages/AdminDashboard";
 import Videos from "./pages/Videos";
+import CategoryPage from "./pages/CategoryPage";
 
 const App = () => (
   <TooltipProvider>
@@ -15,6 +16,7 @@ const App = () => (
       <Route path="/" element={<Index />} />
       <Route path="/videos" element={<Videos />} />
       <Route path="/videos/:title" element={<VideoDetail />} />
+      <Route path="/kategorie/:categoryName" element={<CategoryPage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />
