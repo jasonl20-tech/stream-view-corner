@@ -9,6 +9,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Videos from "./pages/Videos";
 import CategoryPage from "./pages/CategoryPage";
 import AllCategoriesPage from "./pages/AllCategoriesPage";
+import AdPreroll from "./pages/AdPreroll";
 import Shorts from "./pages/Shorts";
 
 const App = () => (
@@ -16,6 +17,7 @@ const App = () => (
     <Sonner />
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/ad" element={<AdPreroll />} />
       <Route path="/videos" element={<Videos />} />
       <Route path="/videos/:title" element={<VideoDetail />} />
       <Route path="/kategorien" element={<AllCategoriesPage />} />

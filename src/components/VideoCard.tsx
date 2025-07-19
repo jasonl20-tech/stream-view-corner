@@ -17,7 +17,7 @@ export const VideoCard = ({ id, title, thumbnail, duration, views, category, upl
 
   const handleClick = () => {
     const slug = createSlug(title);
-    navigate(`/videos/${slug}`);
+    navigate(`/ad?video=${slug}`);
   };
 
   return (
