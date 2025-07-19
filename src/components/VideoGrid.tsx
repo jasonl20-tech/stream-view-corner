@@ -64,8 +64,13 @@ export const VideoGrid = ({ activeCategory }: VideoGridProps) => {
     );
   }
 
-  // Create array with ads inserted every 6th position
+  // Create array with ads - first position and then every 6th position
   const videosWithAds = [];
+  
+  // Add first ad
+  videosWithAds.push({ id: 'ad-first', isAd: true });
+  
+  // Add videos with ads every 6th position
   videos.forEach((video, index) => {
     videosWithAds.push(video);
     if ((index + 1) % 6 === 0) {

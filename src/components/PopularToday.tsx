@@ -96,6 +96,11 @@ export const PopularToday = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
         {(() => {
           const videosWithAds = [];
+          
+          // Add first ad
+          videosWithAds.push({ id: 'ad-first', isAd: true });
+          
+          // Add videos with ads every 6th position
           videos.forEach((video, index) => {
             videosWithAds.push(video);
             if ((index + 1) % 6 === 0) {
