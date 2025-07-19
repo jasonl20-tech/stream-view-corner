@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { CategoryFilter } from "@/components/CategoryFilter";
+import { TagButtons } from "@/components/TagButtons";
+import { PopularToday } from "@/components/PopularToday";
 import { VideoGrid } from "@/components/VideoGrid";
 
 const Index = () => {
-  const [activeCategory, setActiveCategory] = useState("Alle");
+  const [activeTag, setActiveTag] = useState("Alle");
 
   return (
     <div className="min-h-screen bg-background">
@@ -13,15 +14,16 @@ const Index = () => {
       <Hero />
       
       <main className="container mx-auto px-4 py-6 md:py-8">
-        <div className="mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold mb-4">Entdecke Videos</h2>
-          <CategoryFilter 
-            activeCategory={activeCategory}
-            onCategoryChange={setActiveCategory}
-          />
-        </div>
+        <TagButtons onTagSelect={setActiveTag} activeTag={activeTag} />
         
-        <VideoGrid activeCategory={activeCategory} />
+        <PopularToday />
+        
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold mb-6">
+            {activeTag === "Alle" ? "Alle Videos" : `Videos in "${activeTag}"`}
+          </h2>
+          <VideoGrid activeCategory={activeTag} />
+        </div>
       </main>
       
       <footer className="bg-nav-bg border-t border-border mt-16 py-8">

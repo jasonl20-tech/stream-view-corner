@@ -25,12 +25,21 @@ export const Header = () => {
     <header className="sticky top-0 z-50 bg-nav-bg/95 backdrop-blur supports-[backdrop-filter]:bg-nav-bg/60 border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           <Link to="/">
             <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               hub4porn.com
             </h1>
           </Link>
+          
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-foreground hover:text-primary transition-colors font-medium">
+              Home
+            </Link>
+            <Link to="/alle-videos" className="text-foreground hover:text-primary transition-colors font-medium">
+              Alle Videos
+            </Link>
+          </nav>
         </div>
 
         {/* Search Bar - Desktop */}
