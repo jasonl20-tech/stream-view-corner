@@ -97,35 +97,38 @@ const AdminDashboard = () => {
         </Card>
 
         {/* API Documentation */}
-        <Card>
+        <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>API Documentation</CardTitle>
             <CardDescription>
-              How to add videos using curl commands
+              Available APIs for video and category management
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Endpoint</Label>
-              <code className="block p-2 bg-muted rounded text-sm">
-                POST https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video
-              </code>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>Headers</Label>
-              <code className="block p-2 bg-muted rounded text-sm">
-                Content-Type: application/json<br/>
-                Authorization: Bearer {apiKey}
-              </code>
-            </div>
+          <CardContent className="space-y-8">
+            {/* Add Video API */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Add Video API</h3>
+              <div className="space-y-2">
+                <Label>Endpoint</Label>
+                <code className="block p-2 bg-muted rounded text-sm">
+                  POST https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video
+                </code>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Headers</Label>
+                <code className="block p-2 bg-muted rounded text-sm">
+                  Content-Type: application/json<br/>
+                  Authorization: Bearer {apiKey}
+                </code>
+              </div>
 
-            <div className="space-y-2">
-              <Label>Example curl command</Label>
-              <Textarea
-                readOnly
-                rows={20}
-                value={`curl -X POST "https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video" \\
+              <div className="space-y-2">
+                <Label>Example curl command</Label>
+                <Textarea
+                  readOnly
+                  rows={10}
+                  value={`curl -X POST "https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/add-video" \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${apiKey}" \\
   -d '{
@@ -135,49 +138,81 @@ const AdminDashboard = () => {
     "embed": "<iframe>...</iframe>",
     "thumbnail": "https://example.com/thumb.jpg",
     "tag_1": "first tag",
-    "tag_2": "second tag",
-    "tag_3": "third tag",
-    "tag_4": "fourth tag",
-    "tag_5": "fifth tag",
-    "tag_6": "sixth tag",
-    "tag_7": "seventh tag",
-    "tag_8": "eighth tag",
-    "image_1": "https://example.com/img1.jpg",
-    "image_2": "https://example.com/img2.jpg",
-    "image_3": "https://example.com/img3.jpg",
-    "image_4": "https://example.com/img4.jpg",
-    "image_5": "https://example.com/img5.jpg",
-    "image_6": "https://example.com/img6.jpg",
-    "image_7": "https://example.com/img7.jpg",
-    "image_8": "https://example.com/img8.jpg",
-    "image_9": "https://example.com/img9.jpg",
-    "image_10": "https://example.com/img10.jpg",
-    "image_11": "https://example.com/img11.jpg",
-    "image_12": "https://example.com/img12.jpg",
-    "image_13": "https://example.com/img13.jpg",
-    "image_14": "https://example.com/img14.jpg"
+    "tag_2": "second tag"
   }'`}
-                className="font-mono text-xs"
-              />
+                  className="font-mono text-xs"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Required Fields</Label>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• <code>titel</code> - Video title (string)</li>
-                <li>• <code>duration</code> - Video duration (string)</li>
-                <li>• <code>embed</code> - Video embed code (string)</li>
-              </ul>
+            {/* Get Categories API */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Get All Categories with Images API</h3>
+              <div className="space-y-2">
+                <Label>Endpoint</Label>
+                <code className="block p-2 bg-muted rounded text-sm">
+                  GET https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/get-categories-with-images
+                </code>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Example curl command</Label>
+                <Textarea
+                  readOnly
+                  rows={4}
+                  value={`curl -X GET "https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/get-categories-with-images"`}
+                  className="font-mono text-xs"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Response Format</Label>
+                <code className="block p-2 bg-muted rounded text-sm whitespace-pre">
+{`{
+  "success": true,
+  "categories": [
+    {
+      "name": "category-name",
+      "image_url": "https://example.com/image.jpg"
+    }
+  ]
+}`}
+                </code>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Optional Fields</Label>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• <code>describtion</code> - Description (string)</li>
-                <li>• <code>thumbnail</code> - Thumbnail URL (string)</li>
-                <li>• <code>tag_1</code> to <code>tag_8</code> - Individual tags (string)</li>
-                <li>• <code>image_1</code> to <code>image_14</code> - Individual image URLs (string)</li>
-              </ul>
+            {/* Update Category Image API */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Update Category Image API</h3>
+              <div className="space-y-2">
+                <Label>Endpoint</Label>
+                <code className="block p-2 bg-muted rounded text-sm">
+                  POST https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/update-category-image
+                </code>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Example curl command</Label>
+                <Textarea
+                  readOnly
+                  rows={6}
+                  value={`curl -X POST "https://cpushnwxfdvqlglzhxcb.supabase.co/functions/v1/update-category-image" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "categoryName": "category-name",
+    "imageUrl": "https://example.com/new-image.jpg"
+  }'`}
+                  className="font-mono text-xs"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Required Fields</Label>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• <code>categoryName</code> - Category name (string)</li>
+                  <li>• <code>imageUrl</code> - Image URL (string)</li>
+                </ul>
+              </div>
             </div>
           </CardContent>
         </Card>
