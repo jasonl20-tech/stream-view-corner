@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,8 +20,20 @@ serve(async (req) => {
   try {
     const RUNWARE_API_KEY = Deno.env.get('RUNWARE_API_KEY')
     if (!RUNWARE_API_KEY) {
-      throw new Error('RUNWARE_API_KEY is not set')
+      console.error('RUNWARE_API_KEY is not set')
+      return new Response(
+        JSON.stringify({ error: 'RUNWARE_API_KEY is not configured' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500 
+        }
+      )
     }
+
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
 
     const { positivePrompt, categoryName }: GenerateImageRequest = await req.json()
 
@@ -34,8 +47,39 @@ serve(async (req) => {
       )
     }
 
+    console.log(`Checking if image already exists for category: ${categoryName}`)
+
+    // Prüfe ob bereits ein Bild für diese Kategorie existiert
+    const { data: existingCategory, error: checkError } = await supabase
+      .from('categories')
+      .select('image_url')
+      .eq('name', categoryName)
+      .single()
+
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Error checking existing category:', checkError)
+    }
+
+    if (existingCategory?.image_url) {
+      console.log(`Image already exists for category ${categoryName}: ${existingCategory.image_url}`)
+      return new Response(
+        JSON.stringify({ 
+          success: true,
+          imageUrl: existingCategory.image_url,
+          categoryName,
+          message: 'Image already exists',
+          cost: 0
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    console.log(`Generating new image for category: ${categoryName}`)
+
     // Create the enhanced prompt for category images
-    const enhancedPrompt = `${positivePrompt}, high quality, professional, clean background, category icon style, modern design`
+    const enhancedPrompt = `${positivePrompt}, professional category icon, clean design, high quality`
 
     const requestBody = [
       {
@@ -64,7 +108,7 @@ serve(async (req) => {
       }
     ]
 
-    console.log('Sending request to Runware:', JSON.stringify(requestBody, null, 2))
+    console.log('Sending request to Runware API...')
 
     const response = await fetch('https://api.runware.ai/v1', {
       method: 'POST',
@@ -76,18 +120,39 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Runware API error:', errorText)
-      throw new Error(`Runware API error: ${response.status} ${errorText}`)
+      console.error('Runware API error response:', errorText)
+      throw new Error(`Runware API error: ${response.status} - ${errorText}`)
     }
 
     const result = await response.json()
-    console.log('Runware response:', JSON.stringify(result, null, 2))
+    console.log('Runware API response:', JSON.stringify(result, null, 2))
 
     // Find the image inference result
     const imageResult = result.data?.find((item: any) => item.taskType === 'imageInference')
     
     if (!imageResult || !imageResult.imageURL) {
+      console.error('No image generated or invalid response:', result)
       throw new Error('No image generated or invalid response from Runware')
+    }
+
+    console.log(`Image generated successfully: ${imageResult.imageURL}`)
+
+    // Speichere das generierte Bild in der Datenbank
+    const { error: upsertError } = await supabase
+      .from('categories')
+      .upsert({
+        name: categoryName,
+        image_url: imageResult.imageURL,
+        description: `Auto-generated image for ${categoryName} category`
+      }, {
+        onConflict: 'name'
+      })
+
+    if (upsertError) {
+      console.error('Error saving category to database:', upsertError)
+      // Trotzdem das Bild zurückgeben, auch wenn Speichern fehlschlägt
+    } else {
+      console.log(`Category ${categoryName} saved to database successfully`)
     }
 
     return new Response(
@@ -103,7 +168,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error generating category image:', error)
+    console.error('Error in generate-category-image function:', error)
     
     return new Response(
       JSON.stringify({ 

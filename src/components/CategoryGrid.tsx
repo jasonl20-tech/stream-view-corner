@@ -23,6 +23,12 @@ export const CategoryGrid = () => {
   }, []);
 
   const generateCategoryImage = async (categoryName: string) => {
+    // Prüfe zuerst, ob bereits ein Bild existiert
+    if (categories.find(cat => cat.name === categoryName)?.image_url) {
+      console.log(`Image already exists for category: ${categoryName}`);
+      return;
+    }
+
     try {
       setGeneratingImages(prev => new Set(prev).add(categoryName));
       
@@ -35,36 +41,27 @@ export const CategoryGrid = () => {
 
       if (error) {
         console.error('Error generating image:', error);
-        toast.error(`Fehler beim Generieren des Bildes für ${categoryName}`);
+        toast.error(`Fehler beim Generieren des Bildes für ${categoryName}: ${error.message}`);
         return null;
       }
 
       if (data?.success && data?.imageUrl) {
-        // Update the category in database with the new image URL
-        const { error: updateError } = await supabase
-          .from('categories')
-          .upsert({
-            name: categoryName,
-            image_url: data.imageUrl,
-            description: `Auto-generated image for ${categoryName} category`
-          }, {
-            onConflict: 'name'
-          });
-
-        if (updateError) {
-          console.error('Error updating category:', updateError);
-          toast.error(`Fehler beim Speichern des Bildes für ${categoryName}`);
+        if (data.message === 'Image already exists') {
+          console.log(`Image already existed for ${categoryName}`);
         } else {
           toast.success(`Bild für ${categoryName} erfolgreich generiert!`);
-          // Refresh categories to show the new image
-          fetchCategories();
         }
-
+        
+        // Refresh categories to show the new image
+        fetchCategories();
         return data.imageUrl;
+      } else {
+        console.error('Unexpected response format:', data);
+        toast.error(`Unerwartete Antwort beim Generieren des Bildes für ${categoryName}`);
       }
     } catch (error) {
       console.error('Error in generateCategoryImage:', error);
-      toast.error(`Fehler beim Generieren des Bildes für ${categoryName}`);
+      toast.error(`Fehler beim Generieren des Bildes für ${categoryName}: ${error.message}`);
     } finally {
       setGeneratingImages(prev => {
         const newSet = new Set(prev);
@@ -121,9 +118,13 @@ export const CategoryGrid = () => {
       setCategories(selectedCategories);
 
       // Automatisch Bilder für Kategorien ohne Bilder generieren
-      selectedCategories.forEach(category => {
+      selectedCategories.forEach((category, index) => {
         if (!category.image_url && !generatingImages.has(category.name)) {
-          setTimeout(() => generateCategoryImage(category.name), Math.random() * 2000);
+          // Gestaffelte Generierung um API-Rate-Limits zu vermeiden
+          setTimeout(() => {
+            console.log(`Starting image generation for category: ${category.name}`);
+            generateCategoryImage(category.name);
+          }, index * 3000); // 3 Sekunden Abstand zwischen Generierungen
         }
       });
 
