@@ -30,7 +30,7 @@ export const Header = () => {
             <img 
               src="/lovable-uploads/80561d0a-875a-417e-8cd0-902471b094f3.png" 
               alt="hub4porn.com Logo" 
-              className="h-16 md:h-20 w-auto"
+              className="h-24 md:h-30 w-auto"
             />
           </Link>
           
