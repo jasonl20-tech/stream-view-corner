@@ -37,8 +37,8 @@ export const AdCard = () => {
         <div className="w-full h-20 xs:h-24 sm:h-28 md:h-36 lg:h-40 xl:h-44 flex items-center justify-center p-2">
           <ins 
             id="1080434" 
-            data-width="300" 
-            data-height="100"
+            data-width="250" 
+            data-height="80"
             style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
           ></ins>
         </div>
